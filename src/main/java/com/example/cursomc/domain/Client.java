@@ -26,7 +26,7 @@ public class Client implements Serializable {
 	private Integer id;
 	private String name;
 	private String email;
-	private String TID;
+	private String tid;
 	private Integer type;
 	
 	@OneToMany(mappedBy="client")
@@ -44,12 +44,12 @@ public class Client implements Serializable {
 
 	}
 
-	public Client(Integer id, String name, String email, String tID, TypeClient type) {
+	public Client(Integer id, String name, String email, String tid, TypeClient type) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.email = email;
-		TID = tID;
+		this.tid = tid;
 		this.type = (type==null) ? null : type.getCod();
 	}
 
@@ -77,12 +77,13 @@ public class Client implements Serializable {
 		this.email = email;
 	}
 
-	public String getTID() {
-		return TID;
+
+	public String getTid() {
+		return tid;
 	}
 
-	public void setTID(String tID) {
-		TID = tID;
+	public void setTid(String tid) {
+		this.tid = tid;
 	}
 
 	public TypeClient getType() {
