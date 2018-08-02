@@ -2,21 +2,43 @@ package com.example.cursomc.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
+
+import com.example.cursomc.services.validation.ClientInsert;
+
+@ClientInsert
 public class ClientNewDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	
+	@NotEmpty(message="Required Field")
+	@Length(min=5, max = 120, message="The size must to be between 5 and 120 characters")
 	private String name;
+	
+	@NotEmpty(message="Required Field")
+	@Email(message="Invalid email")
+	
+	@NotEmpty(message="Required Field")
 	private String email;
+	
+	@NotEmpty(message="Required Field")
 	private String tid;
 	private Integer type;
 	
+	@NotEmpty(message="Required Field")
 	private String street;
+	
+	@NotEmpty(message="Required Field")
 	private String number;
 	private String complement;
 	private String district;
+	
+	@NotEmpty(message="Required Field")
 	private String zipCode;
 	
+	@NotEmpty(message="Required Field")
 	private String phone1;
 	private String phone2;
 	private String phone3;
