@@ -11,6 +11,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class ItemOrder implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	
+	public double getSubTotal() {
+		return (price - discount) * amount;
+		
+	}
 	@JsonIgnore
 	@EmbeddedId
 	private ItemOrderPK id = new ItemOrderPK();
