@@ -61,6 +61,7 @@ public class DBService {
 		Category cat6 = new Category(null, "Decoration");
 		Category cat7 = new Category(null, "Perfumary");
 
+
 		Product p1 = new Product(null, "Computer", 2000.00);
 		Product p2 = new Product(null, "Print", 800.00);
 		Product p3 = new Product(null, "Mouse", 80.00);
@@ -80,6 +81,7 @@ public class DBService {
 		cat5.getProducts().addAll(Arrays.asList(p8));
 		cat6.getProducts().addAll(Arrays.asList(p9, p10));
 		cat7.getProducts().addAll(Arrays.asList(p11));
+		
 
 		p1.getCategories().addAll(Arrays.asList(cat1, cat4));
 		p2.getCategories().addAll(Arrays.asList(cat1, cat2, cat4));
