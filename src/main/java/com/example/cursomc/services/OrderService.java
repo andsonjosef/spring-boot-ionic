@@ -34,6 +34,8 @@ public class OrderService {
 
 	@Autowired
 	private ProductService productService;
+	
+	@Autowired ClientService clientService;
 
 	public Order find(Integer id) {
 		Optional<Order> obj = repo.findById(id);
@@ -45,6 +47,7 @@ public class OrderService {
 	public Order insert(Order obj) {
 		obj.setId(null);
 		obj.setMoment(new Date());
+		obj.setClient(clientService.find(obj.getClient().getId()));
 		obj.getPayment().setStatus(StatusPayment.PENDING);
 		obj.getPayment().setOrder(obj);
 		if (obj.getPayment() instanceof PaymentBankTransfer) {
@@ -55,10 +58,12 @@ public class OrderService {
 		paymentRepository.save(obj.getPayment());
 		for (ItemOrder io : obj.getItems()) {
 			io.setDiscount(0.0);
-			io.setPrice(productService.find(io.getProduct().getId()).getPrice());
+			io.setProduct(productService.find(io.getProduct().getId()));
+			io.setPrice(io.getProduct().getPrice());
 			io.setOrder(obj);
 		}
 		itemOrderRepository.saveAll(obj.getItems());
+		System.out.println(obj);
 		return obj;
 	}
 }

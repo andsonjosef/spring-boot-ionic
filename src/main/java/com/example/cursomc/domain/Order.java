@@ -1,8 +1,11 @@
 package com.example.cursomc.domain;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -27,8 +30,8 @@ public class Order implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 
 	private Integer id;
-	
-	@JsonFormat(pattern="dd/MM/yyyy HH:mm")
+
+	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
 	private Date moment;
 
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "order")
@@ -42,7 +45,7 @@ public class Order implements Serializable {
 	@JoinColumn(name = "delivery_address_id")
 	private Address deliveryAddress;
 
-	@OneToMany(mappedBy="id.order")
+	@OneToMany(mappedBy = "id.order")
 	private Set<ItemOrder> items = new HashSet<>();
 
 	public Order() {
@@ -56,10 +59,10 @@ public class Order implements Serializable {
 		this.client = client;
 		this.deliveryAddress = deliveryAddress;
 	}
-	
+
 	public double getTotalValue() {
 		double sum = 0.0;
-		for(ItemOrder io : items) {
+		for (ItemOrder io : items) {
 			sum = sum + io.getSubTotal();
 		}
 		return sum;
@@ -140,6 +143,28 @@ public class Order implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		StringBuilder builder = new StringBuilder();
+		builder.append("Order id: ");
+		builder.append(getId());
+		builder.append(", moment: ");
+		builder.append(sdf.format(getMoment()));
+		builder.append(", Client: ");
+		builder.append(getClient().getName());
+		builder.append(", payment status: ");
+		builder.append(getPayment().getStatus().getDescription());
+		builder.append("\nDetails:\n");
+		for (ItemOrder io : getItems()) {
+			builder.append(io.toString());
+		}
+		builder.append("Total value: ");
+		builder.append(nf.format(getTotalValue()));
+		return builder.toString();
 	}
 
 }
