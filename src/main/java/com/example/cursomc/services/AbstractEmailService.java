@@ -1,12 +1,28 @@
 package com.example.cursomc.services;
  import java.util.Date;
- import org.springframework.beans.factory.annotation.Value;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
- import com.example.cursomc.domain.Order;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+
+import com.example.cursomc.domain.Order;
  public abstract class AbstractEmailService implements EmailService {
 	
 	@Value("${default.sender}")
 	private String sender;
+	
+	@Autowired
+	private JavaMailSender javaMailSender;
+	
+	@Autowired
+	private TemplateEngine templateEngine;
 	
 	@Override
 	public void sendOrderConfrimationEmail(Order obj) {
@@ -22,4 +38,36 @@ import org.springframework.mail.SimpleMailMessage;
 		sm.setText(obj.toString());
 		return sm;
 	}
+ 	
+ 	protected String htmlFromTemplateOrder(Order obj) {
+ 		Context context = new Context();
+ 		context.setVariable("order", obj);
+ 		return templateEngine.process("email/confirmationOrder", context);
+ 	}
+ 	
+ 	@Override
+ 	public void sendOrderConfirmationHtmlEmail(Order obj) {
+		try {
+			MimeMessage	mm = prepareMimeMessageFromOrder(obj);
+			sendHtmlEmail(mm);
+
+		} catch (MessagingException e) {
+			sendOrderConfrimationEmail(obj);
+			e.printStackTrace();
+		}
+ 	}
+	protected MimeMessage prepareMimeMessageFromOrder(Order obj) throws MessagingException {
+		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+		MimeMessageHelper mmh = new MimeMessageHelper(mimeMessage, true);
+		mmh.setTo(obj.getClient().getEmail());
+		mmh.setSubject("confirmed order! id: " + obj.getId());
+		mmh.setSentDate(new Date(System.currentTimeMillis()));
+		mmh.setText(htmlFromTemplateOrder(obj));
+		
+		return mimeMessage;
+		
+	}
+
+
+ 	
  }
