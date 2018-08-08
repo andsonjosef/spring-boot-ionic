@@ -24,6 +24,9 @@ public class OrderService {
 	private BankTransferService bankTransferService;
 
 	@Autowired
+	private EmailService emailService;
+	
+	@Autowired
 	private ItemOrderRepository itemOrderRepository;
 
 	@Autowired
@@ -63,7 +66,7 @@ public class OrderService {
 			io.setOrder(obj);
 		}
 		itemOrderRepository.saveAll(obj.getItems());
-		System.out.println(obj);
+		emailService.sendOrderConfrimationEmail(obj);
 		return obj;
 	}
 }
