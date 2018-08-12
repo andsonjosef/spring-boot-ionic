@@ -10,6 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.cursomc.domain.Address;
@@ -28,6 +29,9 @@ public class ClientService {
 
 	@Autowired
 	private ClientRepository repo;
+	
+	@Autowired
+	private BCryptPasswordEncoder pe;
 	
 	@Autowired
 	private AddressRepository addressRepository;
@@ -73,13 +77,13 @@ public class ClientService {
 	}
 
 	public Client fromDTO(ClientDTO objDto) {
-		return new Client(objDto.getId(), objDto.getName(), objDto.getEmail(), null, null);
+		return new Client(objDto.getId(), objDto.getName(), objDto.getEmail(), null, null, null);
 
 	}
 
 	public Client fromDTO(ClientNewDTO objDto) {
 		Client cli = new Client(null, objDto.getName(), objDto.getEmail(), objDto.getTid(),
-				TypeClient.toEnum(objDto.getType()));
+				TypeClient.toEnum(objDto.getType()), pe.encode(objDto.getPassword()));
 		City city = new City(objDto.getCityId(), null, null);
 		Address address = new Address(null, objDto.getStreet(), objDto.getNumber(), objDto.getComplement(),
 				objDto.getDistrict(), objDto.getZipCode(), cli, city);

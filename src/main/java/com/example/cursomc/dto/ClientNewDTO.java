@@ -28,6 +28,9 @@ public class ClientNewDTO implements Serializable {
 	private Integer type;
 	
 	@NotEmpty(message="Required Field")
+	private String password;
+	
+	@NotEmpty(message="Required Field")
 	private String street;
 	
 	@NotEmpty(message="Required Field")
@@ -80,6 +83,16 @@ public class ClientNewDTO implements Serializable {
 
 	public void setType(Integer type) {
 		this.type = type;
+	}
+	
+	
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getStreet() {

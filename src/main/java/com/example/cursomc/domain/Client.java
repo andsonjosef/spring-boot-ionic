@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class Client implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -29,29 +29,33 @@ public class Client implements Serializable {
 	private String email;
 	private String tid;
 	private Integer type;
-	
-	@OneToMany(mappedBy="client", cascade=CascadeType.ALL)
+
+	@JsonIgnore
+	private String password;
+
+	@OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
 	private List<Address> adresses = new ArrayList<>();
 
 	@ElementCollection
-	@CollectionTable(name="phone")
+	@CollectionTable(name = "phone")
 	private Set<String> phones = new HashSet<>();
-	
+
 	@JsonIgnore
-	@OneToMany(mappedBy="client")
+	@OneToMany(mappedBy = "client")
 	private List<Order> orders = new ArrayList<>();
 
 	public Client() {
 
 	}
 
-	public Client(Integer id, String name, String email, String tid, TypeClient type) {
+	public Client(Integer id, String name, String email, String tid, TypeClient type, String password) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.tid = tid;
-		this.type = (type==null) ? null : type.getCod();
+		this.type = (type == null) ? null : type.getCod();
+		this.password = password;
 	}
 
 	public Integer getId() {
@@ -78,7 +82,6 @@ public class Client implements Serializable {
 		this.email = email;
 	}
 
-
 	public String getTid() {
 		return tid;
 	}
@@ -93,6 +96,14 @@ public class Client implements Serializable {
 
 	public void setType(TypeClient type) {
 		this.type = type.getCod();
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public List<Address> getAdresses() {
@@ -110,7 +121,6 @@ public class Client implements Serializable {
 	public void setPhones(Set<String> phones) {
 		this.phones = phones;
 	}
-	
 
 	public List<Order> getOrders() {
 		return orders;
@@ -119,7 +129,7 @@ public class Client implements Serializable {
 	public void setOrders(List<Order> orders) {
 		this.orders = orders;
 	}
- 
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
