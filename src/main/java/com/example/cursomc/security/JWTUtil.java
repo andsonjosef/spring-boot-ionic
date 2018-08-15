@@ -18,7 +18,7 @@ public class JWTUtil {
 	@Value("${jwt.expiration}")
 	private Long expiration;
 
-	public String generationToken(String username) {
+	public String generateToken(String username) {
 
 		return Jwts.builder()
 				.setSubject(username)

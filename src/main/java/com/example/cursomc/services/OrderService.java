@@ -79,7 +79,7 @@ public class OrderService {
 	}
 
 	public Page<Order> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
-		UserSS user = UserService.authemticated();
+		UserSS user = UserService.authenticated();
 		if (user == null) {
 			throw new AuthorizationException("Acess denied");
 		}

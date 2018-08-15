@@ -41,7 +41,7 @@ public class ClientService {
 	
 
 	public Client find(Integer id) {
-		UserSS user = UserService.authemticated();
+		UserSS user = UserService.authenticated();
 		
 		if(user==null || !user.hasRole(Profile.ADMIN) && !id.equals(user.getId())) {
 			throw new AuthorizationException("Acess denied");
