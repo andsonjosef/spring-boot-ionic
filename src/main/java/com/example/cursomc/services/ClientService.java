@@ -32,21 +32,20 @@ public class ClientService {
 
 	@Autowired
 	private ClientRepository repo;
-	
+
 	@Autowired
 	private BCryptPasswordEncoder pe;
-	
+
 	@Autowired
 	private AddressRepository addressRepository;
-	
 
 	public Client find(Integer id) {
 		UserSS user = UserService.authenticated();
-		
-		if(user==null || !user.hasRole(Profile.ADMIN) && !id.equals(user.getId())) {
+
+		if (user == null || !user.hasRole(Profile.ADMIN) && !id.equals(user.getId())) {
 			throw new AuthorizationException("Acess denied");
 		}
-		
+
 		Optional<Client> obj = repo.findById(id);
 		return obj.orElseThrow(
 				() -> new ObjectNotFoundException("Obect not found! Id: " + id + ", Type: " + Client.class.getName()));
@@ -77,6 +76,22 @@ public class ClientService {
 
 	public List<Client> findAll() {
 		return repo.findAll();
+	}
+
+	public Client findByEmail(String email) {
+
+		UserSS user = UserService.authenticated();
+		if (user == null || !user.hasRole(Profile.ADMIN) && !email.equals(user.getUsername())) {
+			throw new AuthorizationException("Acess denied");
+		}
+
+		Client obj = repo.findByEmail(email);
+		if (obj == null) {
+			throw new ObjectNotFoundException(
+					"Object not found! Id: " + user.getId() + ", Type: " + Client.class.getName());
+		}
+		return obj;
+
 	}
 
 	public Page<Client> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
